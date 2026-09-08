@@ -1,27 +1,26 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PARA IFABI - Admin</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<!-- واجهة تسجيل الدخول -->
+<div id="login-section">
+    <h2>تسجيل الدخول للأدمن</h2>
+    <input type="email" id="email" placeholder="ifarkhanemohamed7@gmail.com">
+    <input type="password" id="password" placeholder="mo1ha2me3d@">
+    <button onclick="login()">دخول</button>
+</div>
 
-<body>
-
-    <div style="max-width:600px;margin:100px auto;padding:40px;text-align:center">
-
-        <h1>PARA IFABI</h1>
-
-        <h2>لوحة الإدارة</h2>
-
-        <p>Admin Dashboard</p>
-
-        <button onclick="window.location.href='index.html'">
-            العودة للموقع
-        </button>
-
-    </div>
+<!-- لوحة التحكم (مخفية في البداية) -->
+<div id="dashboard-section" style="display: none;">
+    <h2>مرحبا بك في لوحة التحكم</h2>
+    <button onclick="logout()">تسجيل الخروج</button>
     
-</body>
-</html>
+    <div style="margin-top: 20px;">
+        <h3>إضافة أو تعديل منتج</h3>
+        <input type="text" id="prod-name" placeholder="اسم المنتج">
+        <input type="number" id="prod-price" placeholder="الثمن">
+        <button onclick="addProduct()">إضافة / تعديل</button>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <h3>الطلبات (Les Commandes)</h3>
+        <button onclick="getOrders()">تحديث الطلبات</button>
+        <ul id="orders-list"></ul>
+    </div>
+</div>

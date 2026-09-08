@@ -1,29 +1,43 @@
-<!-- واجهة تسجيل الدخول -->
-<div id="login-section">
-    <h2>تسجيل الدخول للأدمن</h2>
-    <input type="email" id="email" placeholder="email">
-    <input type="password" id="password" placeholder="password">
-    <button onclick="login()">دخول</button>
-</div>
-
-<!-- لوحة التحكم (مخفية في البداية) -->
-<div id="dashboard-section" style="display: none;">
-    <h2>مرحبا بك في لوحة التحكم</h2>
-    <button onclick="logout()">تسجيل الخروج</button>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الإدارة - PARA IFABI</title>
     
-    <div style="margin-top: 20px;">
-        <h3>إضافة أو تعديل منتج</h3>
-        <input type="text" id="prod-name" placeholder="اسم المنتج">
-        <input type="number" id="prod-price" placeholder="الثمن">
-        <button onclick="addProduct()">إضافة / تعديل</button>
+    <!-- الرابط الضروري لتشغيل Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- واجهة تسجيل الدخول -->
+    <div id="login-section">
+        <h2>تسجيل الدخول للأدمن</h2>
+        <input type="email" id="email" placeholder="الإيميل">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button onclick="login()">دخول</button>
     </div>
 
-    <div style="margin-top: 20px;">
-        <h3>الطلبات (Les Commandes)</h3>
-        <button onclick="getOrders()">تحديث الطلبات</button>
-        <ul id="orders-list"></ul>
+    <!-- لوحة التحكم (مخفية في البداية) -->
+    <div id="dashboard-section" style="display: none;">
+        <h2>مرحبا بك في لوحة التحكم</h2>
+        <button onclick="logout()">تسجيل الخروج</button>
+        
+        <div style="margin-top: 20px;">
+            <h3>إضافة أو تعديل منتج</h3>
+            <input type="text" id="prod-name" placeholder="اسم المنتج">
+            <input type="number" id="prod-price" placeholder="الثمن">
+            <button onclick="addProduct()">إضافة / تعديل</button>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3>الطلبات (Les Commandes)</h3>
+            <button onclick="getOrders()">تحديث الطلبات</button>
+            <ul id="orders-list"></ul>
+        </div>
     </div>
-</div>
-<script src="admin.js"></script>
+
+    <!-- ربط الصفحة بملف الجافاسكريبت -->
+    <script src="admin.js"></script>
 </body>
 </html>

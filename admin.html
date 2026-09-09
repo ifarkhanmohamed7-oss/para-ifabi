@@ -1,38 +1,164 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>لوحة الإدارة - PARA IFABI</title>
-    
-    <!-- الرابط الضروري لتشغيل Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Supabase -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+        defer>
+    </script>
+
+    <!-- Admin JavaScript -->
+    <script src="admin.js" defer></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h1, h2, h3 {
+            color: #2f5d50;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #2f5d50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #dashboard-section {
+            display: none;
+        }
+
+        #orders-list {
+            padding: 0;
+            list-style: none;
+        }
+
+        #orders-list li {
+            background: #f5f7f6;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 8px;
+        }
+    </style>
 </head>
+
 <body>
 
-    <!-- واجهة تسجيل الدخول -->
-    <div id="login-section">
+    <!-- ================= LOGIN ================= -->
+
+    <div id="login-section" class="container">
+
         <h2>تسجيل الدخول للأدمن</h2>
-        <input type="email" id="email" placeholder="الإيميل">
-        <input type="password" id="password" placeholder="كلمة المرور">
-        <button onclick="login()">دخول</button>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="الإيميل"
+            autocomplete="email">
+
+        <input
+            type="password"
+            id="password"
+            placeholder="كلمة المرور"
+            autocomplete="current-password">
+
+        <button type="button" onclick="login()">
+            دخول
+        </button>
+
     </div>
 
-    <!-- لوحة التحكم (مخفية في البداية) -->
-    <div id="dashboard-section" style="display: none;">
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <div id="dashboard-section" class="container">
+
         <h2>مرحبا بك في لوحة التحكم</h2>
-        <button onclick="logout()">تسجيل الخروج</button>
-        
-        <div style="margin-top: 20px;">
-            <h3>إضافة أو تعديل منتج</h3>
-            <input type="text" id="prod-name" placeholder="اسم المنتج">
-            <input type="number" id="prod-price" placeholder="الثمن">
-            <button onclick="addProduct()">إضافة / تعديل</button>
+
+        <button type="button" onclick="logout()">
+            تسجيل الخروج
+        </button>
+
+
+        <!-- ================= PRODUCTS ================= -->
+
+        <div style="margin-top: 30px;">
+
+            <h3>إضافة منتج</h3>
+
+            <input
+                type="text"
+                id="prod-name"
+                placeholder="اسم المنتج">
+
+            <input
+                type="number"
+                id="prod-price"
+                placeholder="الثمن بالدرهم"
+                step="0.01">
+
+            <button type="button" onclick="addProduct()">
+                إضافة المنتج
+            </button>
+
         </div>
 
-        <div style="margin-top: 20px;">
-            <h3>الطلبات (Les Commandes)</h3>
-            <button onclick="getOrders()">تحديث الطلبات</button>
-            <ul id="orders-list"></ul>
+
+        <!-- ================= ORDERS ================= -->
+
+        <div style="margin-top: 30px;">
+
+            <h3>الطلبات</h3>
+
+            <button type="button" onclick="getOrders()">
+                تحديث الطلبات
+            </button>
+
+            <ul id="orders-list">
+                <li>اضغط على تحديث الطلبات</li>
+            </ul>
+
         </div>
+
     </div>
+
+</body>
+</html>

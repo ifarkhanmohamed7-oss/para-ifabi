@@ -1,10 +1,12 @@
 // ===============================
-// SUPABASE CONNECTION
+// PARA IFABI - ADMIN
 // ===============================
 
+// حط معلومات Supabase ديالك هنا
 const supabaseUrl = 'https://krtofrjnxqfstmrwymwn.supabase.co/rest/v1/';
 const supabaseKey = 'sb_publishable_7n2MPltuYxtfifSPQ7mxEQ_ZCM11bpe';
 
+// إنشاء Supabase client
 window.adminSupabase = window.supabase.createClient(
     supabaseUrl,
     supabaseKey
@@ -15,7 +17,8 @@ window.adminSupabase = window.supabase.createClient(
 // LOGIN
 // ===============================
 
-async function login() {
+window.login = async function () {
+
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
@@ -24,32 +27,37 @@ async function login() {
         return;
     }
 
-    const { data, error } = await window.adminSupabase.auth.signInWithPassword({
-        email: email,
-        password: password
-    });
+    console.log('جاري تسجيل الدخول...');
+
+    const { data, error } =
+        await window.adminSupabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
 
     if (error) {
         console.error('Login error:', error);
-        alert('خطأ في الإيميل أو كلمة المرور: ' + error.message);
+        alert('خطأ: ' + error.message);
         return;
     }
 
-    console.log('Login successful:', data);
+    console.log('تم تسجيل الدخول بنجاح:', data);
 
     document.getElementById('login-section').style.display = 'none';
     document.getElementById('dashboard-section').style.display = 'block';
 
     getOrders();
-}
+};
 
 
 // ===============================
 // LOGOUT
 // ===============================
 
-async function logout() {
-    const { error } = await window.adminSupabase.auth.signOut();
+window.logout = async function () {
+
+    const { error } =
+        await window.adminSupabase.auth.signOut();
 
     if (error) {
         console.error('Logout error:', error);
@@ -58,81 +66,115 @@ async function logout() {
 
     document.getElementById('login-section').style.display = 'block';
     document.getElementById('dashboard-section').style.display = 'none';
-}
+};
 
 
 // ===============================
 // ADD PRODUCT
 // ===============================
 
-async function addProduct() {
-    const name = document.getElementById('prod-name').value.trim();
-    const price = document.getElementById('prod-price').value;
+window.addProduct = async function () {
+
+    const name =
+        document.getElementById('prod-name').value.trim();
+
+    const price =
+        document.getElementById('prod-price').value;
 
     if (!name || !price) {
-        alert('المرجو إدخال اسم وثمن المنتج');
+        alert('دخل اسم وثمن المنتج');
         return;
     }
 
-    const { data, error } = await window.adminSupabase
-        .from('products')
-        .insert([
-            {
-                name: name,
-                price: parseFloat(price)
-            }
-        ])
-        .select();
+    const { data, error } =
+        await window.adminSupabase
+            .from('products')
+            .insert([
+                {
+                    name: name,
+                    price: parseFloat(price)
+                }
+            ]);
 
     if (error) {
         console.error('Product error:', error);
-        alert('وقع خطأ أثناء إضافة المنتج: ' + error.message);
+        alert('وقع خطأ: ' + error.message);
         return;
     }
 
-    console.log('Product added:', data);
-
-    alert('تمت إضافة المنتج بنجاح!');
+    alert('تمت إضافة المنتج بنجاح ✅');
 
     document.getElementById('prod-name').value = '';
     document.getElementById('prod-price').value = '';
-}
+};
 
 
 // ===============================
 // GET ORDERS
 // ===============================
 
-async function getOrders() {
-    const { data, error } = await window.adminSupabase
-        .from('orders')
-        .select('*');
+window.getOrders = async function () {
 
-    const list = document.getElementById('orders-list');
+    const list =
+        document.getElementById('orders-list');
 
-    list.innerHTML = '';
+    list.innerHTML = '<li>جاري تحميل الطلبات...</li>';
+
+    const { data, error } =
+        await window.adminSupabase
+            .from('orders')
+            .select('*');
 
     if (error) {
         console.error('Orders error:', error);
-        list.innerHTML = '<li>وقع خطأ في جلب الطلبات</li>';
+
+        list.innerHTML =
+            '<li>وقع خطأ في جلب الطلبات</li>';
+
         return;
     }
 
-    if (data && data.length > 0) {
+    list.innerHTML = '';
 
-        data.forEach(order => {
+    if (!data || data.length === 0) {
 
-            const li = document.createElement('li');
+        list.innerHTML =
+            '<li>لا توجد طلبات حاليا</li>';
 
-            li.innerText =
-                `رقم الطلب: ${order.id} | المنتج: ${order.product_name || 'غير محدد'} | الثمن: ${order.total || 0} درهم`;
-
-            list.appendChild(li);
-        });
-
-    } else {
-
-        list.innerHTML = '<li>لا توجد طلبات حاليا</li>';
-
+        return;
     }
-}
+
+    data.forEach(order => {
+
+        const li = document.createElement('li');
+
+        li.innerText =
+            `رقم الطلب: ${order.id} | ` +
+            `المنتج: ${order.product_name || 'غير محدد'} | ` +
+            `الثمن: ${order.total || 0} درهم`;
+
+        list.appendChild(li);
+    });
+};
+
+
+// ===============================
+// CHECK CURRENT SESSION
+// ===============================
+
+window.addEventListener('load', async function () {
+
+    console.log('admin.js خدام ✅');
+
+    const { data } =
+        await window.adminSupabase.auth.getSession();
+
+    if (data.session) {
+
+        document.getElementById('login-section').style.display = 'none';
+
+        document.getElementById('dashboard-section').style.display = 'block';
+
+        getOrders();
+    }
+});

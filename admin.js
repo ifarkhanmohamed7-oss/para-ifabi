@@ -1,38 +1,72 @@
-// إعداد الاتصال بقاعدة البيانات (Supabase)
-const supabaseUrl = 'https://krtofrjnxqfstmrwymwn.supabase.co/rest/v1/'
-const supabaseKey = 'sb_publishable_7n2MPltuYxtfifSPQ7mxEQ_ZCM11bpe'
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+// ===============================
+// SUPABASE CONNECTION
+// ===============================
 
-// دالة تسجيل الدخول
+const supabaseUrl = 'https://krtofrjnxqfstmrwymwn.supabase.co/rest/v1/';
+const supabaseKey = 'sb_publishable_7n2MPltuYxtfifSPQ7mxEQ_ZCM11bpe';
+
+window.adminSupabase = window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+);
+
+
+// ===============================
+// LOGIN
+// ===============================
+
 async function login() {
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
-    
-    const { data, error } = await supabase.auth.signInWithPassword({
+
+    if (!email || !password) {
+        alert('دخل الإيميل وكلمة المرور');
+        return;
+    }
+
+    const { data, error } = await window.adminSupabase.auth.signInWithPassword({
         email: email,
-        password: password,
+        password: password
     });
 
     if (error) {
-        alert('خطأ في الإيميل أو كلمة المرور!');
-        console.error(error);
-    } else {
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('dashboard-section').style.display = 'block';
-        getOrders(); // جلب الطلبات مباشرة بعد الدخول بنجاح
+        console.error('Login error:', error);
+        alert('خطأ في الإيميل أو كلمة المرور: ' + error.message);
+        return;
     }
+
+    console.log('Login successful:', data);
+
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('dashboard-section').style.display = 'block';
+
+    getOrders();
 }
 
-// دالة تسجيل الخروج
+
+// ===============================
+// LOGOUT
+// ===============================
+
 async function logout() {
-    await supabase.auth.signOut();
+    const { error } = await window.adminSupabase.auth.signOut();
+
+    if (error) {
+        console.error('Logout error:', error);
+        return;
+    }
+
     document.getElementById('login-section').style.display = 'block';
     document.getElementById('dashboard-section').style.display = 'none';
 }
 
-// دالة إضافة منتج
+
+// ===============================
+// ADD PRODUCT
+// ===============================
+
 async function addProduct() {
-    const name = document.getElementById('prod-name').value;
+    const name = document.getElementById('prod-name').value.trim();
     const price = document.getElementById('prod-price').value;
 
     if (!name || !price) {
@@ -40,43 +74,65 @@ async function addProduct() {
         return;
     }
 
-    const { data, error } = await supabase
-        .from('products') // تأكد أن اسم الجدول في Supabase هو products
-        .insert([{ name: name, price: parseFloat(price) }]);
+    const { data, error } = await window.adminSupabase
+        .from('products')
+        .insert([
+            {
+                name: name,
+                price: parseFloat(price)
+            }
+        ])
+        .select();
 
     if (error) {
-        alert('وقع خطأ أثناء الإضافة');
-        console.error(error);
-    } else {
-        alert('تمت إضافة المنتج بنجاح!');
-        // تفريغ الخانات بعد الإضافة
-        document.getElementById('prod-name').value = '';
-        document.getElementById('prod-price').value = '';
+        console.error('Product error:', error);
+        alert('وقع خطأ أثناء إضافة المنتج: ' + error.message);
+        return;
     }
+
+    console.log('Product added:', data);
+
+    alert('تمت إضافة المنتج بنجاح!');
+
+    document.getElementById('prod-name').value = '';
+    document.getElementById('prod-price').value = '';
 }
 
-// دالة جلب الطلبات
+
+// ===============================
+// GET ORDERS
+// ===============================
+
 async function getOrders() {
-    const { data, error } = await supabase
-        .from('orders') // تأكد أن اسم جدول الطلبات في Supabase هو orders
+    const { data, error } = await window.adminSupabase
+        .from('orders')
         .select('*');
 
     const list = document.getElementById('orders-list');
-    list.innerHTML = ''; 
-    
+
+    list.innerHTML = '';
+
     if (error) {
-        console.error("خطأ في جلب الطلبات:", error);
+        console.error('Orders error:', error);
+        list.innerHTML = '<li>وقع خطأ في جلب الطلبات</li>';
         return;
     }
 
     if (data && data.length > 0) {
+
         data.forEach(order => {
+
             const li = document.createElement('li');
-            // تأكد أن أسماء الأعمدة (product_name و total) كطابق داكشي لي عندك في الجدول
-            li.innerText = `رقم الطلب: ${order.id} | المنتج: ${order.product_name || 'غير محدد'} | الثمن: ${order.total || 0} درهم`;
+
+            li.innerText =
+                `رقم الطلب: ${order.id} | المنتج: ${order.product_name || 'غير محدد'} | الثمن: ${order.total || 0} درهم`;
+
             list.appendChild(li);
         });
+
     } else {
+
         list.innerHTML = '<li>لا توجد طلبات حاليا</li>';
+
     }
 }

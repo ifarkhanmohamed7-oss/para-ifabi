@@ -7,7 +7,7 @@ const supabaseUrl = 'https://krtofrjnxqfstmrwymwn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtydG9mcmpueHFmc3Rtcnd5bXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxMjA5MDksImV4cCI6MjEwMzY5NjkwOX0.9gwgtXP_zLRhTRW7wDibmAqIak95Pp7BMLjqgmFb-wI';
 
 // إنشاء Supabase client
-window.adminSupabase = window.supabase.createClient(
+const supabase = window.supabase.createClient(
     supabaseUrl,
     supabaseKey
 );
